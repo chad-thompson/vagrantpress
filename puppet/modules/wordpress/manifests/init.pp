@@ -43,7 +43,7 @@ class wordpress::install{
   
   # Copy a working wp-config.php file for the vagrant setup.
   file{
-    "/vagrant/WordPress/wp-config.php":
+    "/vagrant/wordpress/wp-config.php":
     source=>"puppet:///modules/wordpress/wp-config.php"
   }
   
