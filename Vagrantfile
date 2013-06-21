@@ -13,7 +13,7 @@ Vagrant::Config.run do |config|
   # doesn't already exist on the user's system.
   # NOTE:  This box is one created by Chad Thompson for use with 'Vagrantpress',
   # the file is currently available (as of Jan. 2013) on the Amazon S3 service.
-  config.vm.box_url = "https://s3.amazonaws.com/chadthompson-me-vagrantboxes/vagrant-ubuntu-1204_32.box"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
 
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
