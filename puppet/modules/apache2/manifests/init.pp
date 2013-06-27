@@ -1,55 +1,44 @@
 class apache2::install{
 
-  package { "apache2": ensure => present,}
+  package { "apache2-mpm-worker": ensure => latest,}
 
   service { "apache2":
+    enable => true,
     ensure => running,
-    require => Package["apache2"],
+    require => Package["apache2-mpm-worker"],
+    subscribe => [Package["apache2-mpm-worker"]],
   }
 
-  /*
-    the httpd.conf change the user/group that apache uses to run its process
-   */
-  file { '/etc/apache2/httpd.conf':
-    owner => root,
-    group => root,
-    ensure => file,
-    mode => 644,
-    source => '/vagrant/files/etc/apache2/httpd.conf',
-    require => Package["apache2"]
+  # use our httpd.conf file
+  file { "/etc/apache2/conf.d/httpd.conf":
+      ensure => file,
+      source => "puppet:///modules/apache2/httpd.conf",
+      require => Package['apache2-mpm-worker'],
+      notify  => Service["apache2"],
   }
 
-  file { '/etc/apache2/sites-available/default':
-    owner => root,
-    group => root,
-    ensure => file,
-    mode => 644,
-    source => '/vagrant/files/etc/apache2/sites-available/default',
-    require => Package["apache2"],
+  # disable default site after fresh apache installation
+  exec { "a2dissite 000-default":
+     command => "a2dissite 000-default",
+     onlyif => "test -f /etc/apache2/sites-enabled/000-default",
+     require => Package["apache2-mpm-worker"],
+     notify  => Service["apache2"],
   }
 
-  file { '/etc/apache2/mods-available/rewrite.load':
-    owner => root,
-    group => root,
-    ensure => file,
-    mode => 644,
-    source => '/vagrant/files/etc/apache2/mods-available/rewrite.load',
-    require => Package['apache2'],
+  # enable mod vhost_alias
+  exec { "a2enmod vhost_alias":
+     command => "a2enmod vhost_alias",
+     creates => '/etc/apache2/mods-enabled/vhost_alias.load',
+     require => Package["apache2-mpm-worker"],
+     notify  => Service["apache2"],
   }
 
-
-  file { '/etc/apache2/sites-enabled/000-default':
-    notify => Service["apache2"],
-    ensure => link,
-    target => "/etc/apache2/sites-available/default",
-    require => Package["apache2"],
-  }
-
-  file { '/etc/apache2/mods-enabled/rewrite.load':
-    notify => Service["apache2"],
-    ensure => link,
-    target => "/etc/apache2/mods-available/rewrite.load",
-    require => Package["apache2"],
+  # enable mod rewrite
+  exec { "a2enmod rewrite":
+      command => "a2enmod rewrite",
+      creates => '/etc/apache2/mods-enabled/rewrite.load',
+      require => Package["apache2-mpm-worker"],
+      notify  => Service["apache2"],
   }
 
 }

@@ -1,69 +1,97 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant::Config.run do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+Vagrant.configure("2") do |config|
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "precise64"
+  config.vm.box = "precise64"  
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  
-  # NOTE:  This box is one that has been created by the Ubuntu team - note that 
-  # this box is a stock ubuntu image of Ubuntu 12.04 LTS ("Precise Pangolin")
-  # More boxes (including the box that 'vagrant' uses as an example) are available
-  # at http://vagrantup.com
-  
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.network :private_network, ip: "192.168.192.168"
 
-  # Boot with a GUI so you can see the screen. (Default is headless)
-  # config.vm.boot_mode = :gui
+  # config.vm.network :forwarded_port, guest: 80, host: 8080
 
-  # Assign this VM to a host-only network IP, allowing you to access it
-  # via the IP. Host-only networks can talk to the host machine as well as
-  # any other machines on the same network, but cannot be accessed (through this
-  # network interface) by any external networks.
-  # config.vm.network :hostonly, "192.168.33.10"
+  config.vm.synced_folder "projects", "/shared_projects" # @todo 
 
-  # Assign this VM to a bridged network, allowing you to connect directly to a
-  # network using the host's network device. This makes the VM appear as another
-  # physical device on your network.
-  # config.vm.network :bridged
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "512"]
+  end
 
-  # Forward a port from the guest to the host, which allows for outside
-  # computers to access the VM, whereas host only networking does not.
-  config.vm.forward_port 80, 8080
+  config.vm.provision :puppet do |puppet|
+   puppet.manifests_path = "puppet/manifests"
+   puppet.module_path = "puppet/modules"
+   puppet.manifest_file  = "vagrantpress.pp"
+   puppet.options = ["--verbose"]
+  end
 
-  # Share an additional folder to the guest VM. The first argument is
-  # an identifier, the second is the path on the guest to mount the
-  # folder, and the third is the path on the host to the actual folder.
-  # config.vm.share_folder "v-data", "/vagrant_data", "../data"
+  # use https://github.com/mattes/vagrant-dnsmasq plugin
+  # for dnsmasq handling
+  # @todo 
+  config.dnsmasq.domain = '.wp'
+  config.dnsmasq.dnsmasqconf = `brew --prefix`.strip + '/etc/dnsmasq.conf'
+  config.dnsmasq.keep_resolver_on_destroy = true
 
-  # Enable provisioning with Puppet stand alone.  Puppet manifests
-  # are contained in a directory path relative to this Vagrantfile.
-  # You will need to create the manifests directory and a manifest in
-  # the file base.pp in the manifests_path directory.
-  #
-  # An example Puppet manifest to provision the message of the day:
-  #
-  # # group { "puppet":
-  # #   ensure => "present",
-  # # }
-  # #
-  # # File { owner => 0, group => 0, mode => 0644 }
-  # #
-  # # file { '/etc/motd':
-  # #   content => "Welcome to your Vagrant-built virtual machine!
-  # #               Managed by Puppet.\n"
-  # # }
-  #
-   config.vm.provision :puppet do |puppet|
-     puppet.manifests_path = "puppet/manifests"
-     puppet.module_path = "puppet/modules"
-     puppet.manifest_file  = "init.pp"
-     puppet.options="--verbose --debug"
-   end
+
+
+
+
+  module MysqlBackup
+
+    class Import
+      def initialize(app, env)
+        @app = app
+        @machine = env[:machine]
+      end
+      def call(env)
+        puts "MysqlBackup import"
+
+        # @todo
+
+        # find all wp-config.php files in projects/*
+
+        # unless database for project exists, create database and import .mysql_dump
+
+        @app.call(env)
+      end
+    end
+
+    class Export
+      def initialize(app, env)
+        @app = app
+        @machine = env[:machine]
+      end
+      def call(env)
+        puts "MysqlBackup export"
+
+        # @todo
+
+        # find all wp-config.php files in projects/*
+
+        # dump mysql data for database
+
+        # save dump to projects/foobar/.mysql_dump
+
+        @app.call(env)
+      end
+    end
+
+  end
+
+
+  class MysqlBackupPlugin < Vagrant.plugin("2")
+    name "Mysql Backup"
+
+    action_hook(:mysql_backup, :machine_action_up) do |hook|
+      hook.append(MysqlBackup::Import)
+    end
+
+    action_hook(:mysql_backup, :machine_action_reload) do |hook|
+      hook.append(MysqlBackup::Import)
+    end
+
+    action_hook(:mysql_backup, :machine_action_destroy) do |hook|
+      hook.prepend(MysqlBackup::Export)
+    end
+  end
+
+
 end

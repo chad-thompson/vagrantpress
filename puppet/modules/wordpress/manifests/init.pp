@@ -1,50 +1,74 @@
-class wordpress::install{
-  
-  # Create the Wordpress database
-  exec{"create-database":
-    unless=>"/usr/bin/mysql -u root -pvagrant wordpress",
-    command=>"/usr/bin/mysql -u root -pvagrant --execute=\"create database wordpress\"",
-  }
-  
-  # Create a MySQL user for wordpress.
-  exec{"create-user":
-    unless=>"/usr/bin/mysql -u wordpress -pwordpress",
-    command=>"/usr/bin/mysql -u root -pvagrant --execute=\"GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost' IDENTIFIED BY 'wordpress' \"",
-  }
-  
-  # Get a new copy of the latest wordpress release
+class wordpress::monitor_directory_and_install {
 
-	# FILE TO DOWNLOAD: http://wordpress.org/latest.tar.gz
+  # @question: how do you like this?
 
-
-  
-  exec{"git-wordpress": #tee hee
-    command=>"/usr/bin/wget http://wordpress.org/latest.tar.gz",
-    cwd=>"/vagrant/",
-    creates=>"/vagrant/latest.tar.gz"
+  # link bash script and make it executable
+  file { "/home/vagrant/trigger_install.sh":
+      ensure => link,
+      source => "puppet:///modules/wordpress/trigger_install.sh",
+      mode => "u+x",
+      owner => "vagrant",
   }
 
-  exec{"untar-wordpress":
-    cwd     => "/vagrant/",
-    command => "/bin/tar xzvf /vagrant/latest.tar.gz",
-    require => Exec["git-wordpress"],
+  # run in background
+  exec{ 'nohup trigger_install.sh':
+    cwd => "/home/vagrant",
+    command => "nohup ./trigger_install.sh /shared_projects 0<&- &>/dev/null &",
+    require => File[ "/home/vagrant/trigger_install.sh" ],
   }
-  
 
-  # Import a MySQL database for a basic wordpress site.
-  file{
-    "/tmp/wordpress-db.sql":
-    source=>"puppet:///modules/wordpress/wordpress-db.sql"
+}
+
+class wordpress::create {
+
+  # use wp cli to install a wordpress version
+  # -----------------------------------------
+  # wp core download --version=3.5.1 --path="wptest.wp"
+  # cd wptest.wp
+  # wp core config --dbname="wptest" --dbuser="root" --dbpass="vagrant" --dbhost="localhost"
+  # wp db create
+  # wp core install --url="http://wptest.wp" --title="WPTest" --admin_name="vagrant" --admin_password="vagrant" --admin_email="vagrant@vagrant"
+
+  $install_path = '/shared_projects'
+  $version = '3.5.2'
+  $wpname = 'wptest' # .wp
+
+  # download version
+  exec { "wp core download ${wpname}":
+    cwd => $install_path,
+    command => "wp core download --version='${version}' --path='${wpname}.wp'",
+    unless => "test -d ${install_path}/${wpname}.wp",
+    require => File["/usr/bin/wp"],
   }
-  
-  exec{"load-db":
-    command=>"/usr/bin/mysql -u wordpress -pwordpress wordpress < /tmp/wordpress-db.sql"
+
+  # config 
+  exec { "wp core config ${wpname}":
+    refreshonly => true,
+    subscribe => Exec["wp core download ${wpname}"],
+    cwd => "${install_path}/${wpname}.wp",
+    command => "wp core config --dbname='${wpname}' --dbuser='root' --dbpass='vagrant' --dbhost='localhost'",
+    onlyif => "test -d ${install_path}/${wpname}.wp",
+    require => [File["/usr/bin/wp"]],
   }
-  
-  # Copy a working wp-config.php file for the vagrant setup.
-  file{
-    "/vagrant/wordpress/wp-config.php":
-    source=>"puppet:///modules/wordpress/wp-config.php"
+
+  # create database 
+  exec { "wp db create ${wpname}":
+    refreshonly => true,
+    subscribe => Exec["wp core config ${wpname}"],
+    cwd => "${install_path}/${wpname}.wp",
+    command => "wp db create",
+    onlyif => "test -d ${install_path}/${wpname}.wp",
+    require => [File["/usr/bin/wp"]],
   }
-  
+
+  # install wordpress
+  exec { "wp core install ${wpname}":
+    refreshonly => true,
+    subscribe => Exec["wp db create ${wpname}"],
+    cwd => "${install_path}/${wpname}.wp",
+    command => "wp core install --url='http://${wpname}.wp' --title='${wpname}' --admin_name='vagrant' --admin_password='vagrant' --admin_email='vagrant@vagrant'",
+    onlyif => "test -d ${install_path}/${wpname}.wp",
+    require => [File["/usr/bin/wp"]],
+  }
+
 }

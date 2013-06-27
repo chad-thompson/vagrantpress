@@ -1,4 +1,3 @@
 .vagrant
-.ey_local_data
-latest.tar.gz
-wordpress/
+.DS_Store
+projects/wptest.wp
