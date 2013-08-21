@@ -1,19 +1,19 @@
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
-	DocumentRoot /vagrant
+	DocumentRoot /vagrant/wordpress
 	RewriteLogLevel 9
 	RewriteLog ${APACHE_LOG_DIR}/vagrant.rewrite.log
 
-	<Directory /vagrant>
+	<Directory /vagrant/wordpress>
 	    Options Indexes FollowSymLinks
 	    AllowOverride None
 	    RewriteEngine On
-	    RewriteBase /wordpress/
+	    RewriteBase /
 	    RewriteRule ^index\.php$ - [L]
 	    RewriteCond %{REQUEST_FILENAME} !-f
 	    RewriteCond %{REQUEST_FILENAME} !-d
-	    RewriteRule . /wordpress/index.php [L]
+	    RewriteRule . /index.php [L]
 	</Directory>
 
 	ErrorLog ${APACHE_LOG_DIR}/vagrantpress.error.log
