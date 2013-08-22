@@ -1,3 +1,9 @@
-class git::install{
-  package{"git": ensure=>present,}
+# Install git
+
+class git::install {
+
+  package{'git':
+    ensure=>present,
+  }
+
 }

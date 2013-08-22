@@ -1,8 +1,16 @@
-class php5::install{
-  package{"php5": ensure=>present,}
-  package{"php5-mysql": ensure=>present,}
-  package{"php5-curl": ensure=>present,}
-  package{"php5-gd": ensure=>present,}
-  package{"php5-fpm": ensure=>present,}
-  package{"libapache2-mod-php5": ensure=>present,}
+# Install PHP
+
+class php5::install {
+
+  package { [
+      'php5',
+      'php5-mysql',
+      'php5-curl',
+      'php5-gd',
+      'php5-fpm',
+      'libapache2-mod-php5',
+    ]:
+    ensure => present,
+  }
+
 }
