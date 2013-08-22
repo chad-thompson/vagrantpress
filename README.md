@@ -12,7 +12,7 @@ This is a fairly simple project to get up and running.  The procedure for starti
 
 You’ll note that a copy of WordPress v. 3.5 has also been copied to the directory where you ran the `vagrant up` command - this is what is being served from the virtual environment.
 
-To log in to the local Wordpress installation at http://localhost:8080/wordpress/wp-admin/ the username is `admin`, the password is `vagrant`.
+To log in to the local Wordpress installation at http://localhost:8080/wp-admin/ the username is `admin`, the password is `vagrant`.
 
 ## A Few Details
 
