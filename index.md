@@ -18,7 +18,7 @@ title: Say Hello to Vagrantpress
 
 
   Once vagrant builds the environment, you'll have a clean development 
-  environment for creating your own WordPress modules and themes by opening `http://localhost:8080/wordpress`.
+  environment for creating your own WordPress modules and themes by opening `http://localhost:8080/`.
 
 
 ###What Do I Need to Get Started?
@@ -29,7 +29,7 @@ title: Say Hello to Vagrantpress
 
 **... and that's it.**  From here, you can follow the four-command script above or get your own copy of Vagrantpress [from the github repository][vpgithub].  Vagrantpress uses [Puppet] scripting to set up a working Wordpress installation.
 
-**NOTE: ** you can log in to the Wordpress admin panel at `http://localhost:8080/wordpress/wp-admin/` with the username `admin` and the password `vagrant`.
+**NOTE: ** you can log in to the Wordpress admin panel at `http://localhost:8080/wp-admin/` with the username `admin` and the password `vagrant`.
 
 
 ###What Does VagrantPress Install?
