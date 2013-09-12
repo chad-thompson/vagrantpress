@@ -35,7 +35,8 @@ class wordpress::install {
   }
 
   exec { 'load-db':
-    command => '/usr/bin/mysql -u wordpress -pwordpress wordpress < /tmp/wordpress-db.sql'
+    command => '/usr/bin/mysql -u wordpress -pwordpress wordpress < /tmp/wordpress-db.sql && touch /home/vagrant/db-created',
+    creates => '/home/vagrant/db-created',
   }
 
   # Copy a working wp-config.php file for the vagrant setup.
