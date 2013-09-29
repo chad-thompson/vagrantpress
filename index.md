@@ -10,9 +10,9 @@ title: Say Hello to Vagrantpress
   Using Vagrantpress is meant to be easy - you should be able to get started with four commands:
 
   <div style="width:100%; padding: 5px; display:block; background-color:#073642;">
-  <code style="color:#93a1a1; background-color: inherit;">$ wget https://github.com/chad-thompson/vagrantpress/archive/master.zip </code>
-  <code style="color:#93a1a1; background-color: inherit;">$ unzip vagrantpress-master.zip</code>  <br/>
-  <code style="color:#93a1a1; background-color: inherit;">$ cd vagrantpress-master</code><br/>
+  <code style="color:#93a1a1; background-color: inherit;">$ wget -O vagrantpress-master.zip https://github.com/chad-thompson/vagrantpress/archive/master.zip </code> <br />
+  <code style="color:#93a1a1; background-color: inherit;">$ unzip vagrantpress-master.zip</code> <br />
+  <code style="color:#93a1a1; background-color: inherit;">$ cd vagrantpress-master</code> <br />
   <code style="color:#93a1a1; background-color: inherit;">$ vagrant up</code>
   </div>
 
