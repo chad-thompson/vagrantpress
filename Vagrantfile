@@ -7,7 +7,9 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
 
   config.vm.network :forwarded_port, guest: 80, host: 8080
-
+  if defined? VagrantVbguest
+    config.vbguest.auto_update = true
+  end
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "puppet/manifests"
     puppet.module_path = "puppet/modules"
