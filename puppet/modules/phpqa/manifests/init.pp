@@ -58,7 +58,7 @@ class phpqa::install{
 	
 	# install PHP_CodeBrowser
 	exec {"pear install PHP_CodeBrowser":
-	  command => "/usr/bin/pear install --alldeps pear.phpqatools.org/PHP_CodeBrowser",
+	  command => "/usr/bin/pear install --alldeps pear.phpunit.de/PHP_CodeBrowser",
 	  creates => '/usr/bin/phpcb',
 	  require => Exec['pear update-channels']
 	}
