@@ -1,12 +1,13 @@
 # VagrantPress
 
-*VagrantPress* is a packaged development environment for developing WordPress themes and modules.  
+*VagrantPress* is a packaged development environment for developing WordPress themes and modules.
 I initially created this project to aid in developing child modules for a WordPress blog.
 
 # What's Installed
 
 + Ubuntu Precise (12.04)
-+ Wordpress 3.8
++ WordPress 3.9.1 running Twenty Twelve theme.
++ WordPress Toolkit for Envato Marketplace hosted items
 + Mysql
 + Php
 + Phpmyadmin
@@ -26,7 +27,7 @@ I initially created this project to aid in developing child modules for a WordPr
 
 ## Getting Started
 
-This is a fairly simple project to get up and running.  
+This is a fairly simple project to get up and running.
 The procedure for starting up a working WordPress is as follows:
 
 1. Clone the project.  (There’s only master branch.)
@@ -35,7 +36,7 @@ The procedure for starting up a working WordPress is as follows:
 
 ## Working with the environment
 
-To log in to the local Wordpress installation:
+To log in to the local WordPress installation:
 
 `http://localhost:8080/wp-admin/` the username is `admin`, the password is `vagrant`.
 

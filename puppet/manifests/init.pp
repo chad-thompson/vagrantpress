@@ -3,11 +3,13 @@ exec { 'apt_update':
   path    => '/usr/bin'
 }
 
-class { 'git::install': }
-class { 'subversion::install': }
-class { 'apache2::install': }
-class { 'php5::install': }
-class { 'mysql::install': }
-class { 'wordpress::install': }
-class { 'phpmyadmin::install': }
-class { 'phpqa::install': }
+include git
+include subversion
+include apache2
+include php5
+include mysql
+include wordpress
+include phpmyadmin
+include phpqa
+include envato_wordpress_toolkit
+include wp_cli
