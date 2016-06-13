@@ -67,4 +67,4 @@ You can access phpMyAdmin:
 Feel free to file an issue, create a pull request, or contact me at [my website][chadthompson].
 
 [chadthompson]: http://chadthompson.me
-[ts]: https://github.com/chad-thompson/vagrantpress/wiki/Troubleshooting-tips
+[ts]: https://github.com/vagrantpress/vagrantpress/wiki
