@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
     puppet.manifest_file  = "init.pp"
     puppet.options="--verbose --debug"
   end
-  
+
   # Fix for slow external network connections
   config.vm.provider :virtualbox do |vb|
     vb.memory = 2048
