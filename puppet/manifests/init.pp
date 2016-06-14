@@ -17,3 +17,4 @@ class { 'phpmyadmin::install': }
 class { 'composer::install': }
 class { 'phpqa::install': }
 class { 'tests::install': }
+class { 'wpcli::install': }
