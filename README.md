@@ -13,6 +13,7 @@ I initially created this project to aid in developing child modules for a WordPr
 + Subversion
 + Git
 + Composer
++ WP-CLI
 + ~~PEAR~~
 + Xdebug
 + PHPUnit - **installed via composer*
