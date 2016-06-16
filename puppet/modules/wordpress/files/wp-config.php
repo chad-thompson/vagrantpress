@@ -2,10 +2,10 @@
 /**
  * The base configurations of the WordPress.
  *
- * This file has the following configurations: MySQL settings, Table Prefix,
+ * This file has the following configurations: MariaDB settings, Table Prefix,
  * Secret Keys, WordPress Language, and ABSPATH. You can find more information
  * by visiting {@link http://codex.wordpress.org/Editing_wp-config.php Editing
- * wp-config.php} Codex page. You can get the MySQL settings from your web host.
+ * wp-config.php} Codex page. You can get the MariaDB settings from your web host.
  *
  * This file is used by the wp-config.php creation script during the
  * installation. You don't have to use the web site, you can just copy this file
@@ -14,17 +14,17 @@
  * @package WordPress
  */
 
-// ** MySQL settings - You can get this info from your web host ** //
+// ** MariaDB settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
 
-/** MySQL database username */
+/** MariaDB database username */
 define('DB_USER', 'wordpress');
 
-/** MySQL database password */
+/** MariaDB database password */
 define('DB_PASSWORD', 'wordpress');
 
-/** MySQL hostname */
+/** MariaDB hostname */
 define('DB_HOST', 'localhost');
 
 /** Database Charset to use in creating database tables. */

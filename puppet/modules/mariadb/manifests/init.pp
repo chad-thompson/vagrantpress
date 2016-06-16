@@ -1,20 +1,20 @@
-#Install MySQL
+#Install MariaDB
 
-class mysql::install {
+class mariadb::install {
 
   $password = 'vagrant'
 
   package { [
-      'mysql-client',
-      'mysql-server',
+      'mariadb-client',
+      'mariadb-server',
     ]:
     ensure => installed,
   }
 
   exec { 'Set MySQL server\'s root password':
     subscribe   => [
-      Package['mysql-server'],
-      Package['mysql-client'],
+      Package['mariadb-server'],
+      Package['mariadb-client'],
     ],
     refreshonly => true,
     unless      => "mysqladmin -uroot -p${password} status",

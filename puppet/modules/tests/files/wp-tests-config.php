@@ -15,7 +15,7 @@ define( 'ABSPATH', dirname( __FILE__ ) . '/src/' );
 // Test with WordPress debug mode (default).
 define( 'WP_DEBUG', true );
 
-// ** MySQL settings ** //
+// ** MariaDB settings ** //
 
 // This configuration file will be used by the copy of WordPress being tested.
 // wordpress/wp-config.php will be ignored.
