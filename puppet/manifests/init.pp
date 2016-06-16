@@ -11,6 +11,7 @@ class { 'git::install': }
 class { 'subversion::install': }
 class { 'apache2::install': }
 class { 'php5::install': }
+class { 'php7::install': }
 class { 'mariadb::install': }
 class { 'wordpress::install': }
 class { 'phpmyadmin::install': }
