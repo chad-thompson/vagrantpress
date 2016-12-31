@@ -5,14 +5,34 @@ Vagrant.configure("2") do |config|
   config.vm.box = "trusty64"
   config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
 
+  # fix "==> default: stdin: is not a tty" error message
+  config.vm.provision "fix-no-tty", type: "shell" do |s|
+    s.privileged = false
+    s.inline = "sudo grep -q 'tty -s && mesg' /root/.profile || \\
+                    sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
+  end
+
   # allows running commands globally in shell for installed composer libraries
   config.vm.provision :shell, path: "files/scripts/setup.sh"
 
   # setup virtual hostname and provision local IP
   config.vm.hostname = "vagrantpress.dev"
   config.vm.network :private_network, :ip => "192.168.50.4"
-  config.hostsupdater.aliases = %w{www.vagrantpress.dev}
-  config.hostsupdater.remove_on_suspend = true
+
+  # add virtual hostname to /etc/hosts
+  if Vagrant.has_plugin?('HostsUpdater')
+    config.hostsupdater.aliases = %w{www.vagrantpress.dev}
+    config.hostsupdater.remove_on_suspend = true
+  elsif Vagrant.has_plugin?('HostManager')
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.manage_guest = true
+    config.hostmanager.ignore_private_ip = false
+    config.hostmanager.include_offline = true
+    config.hostmanager.aliases = %w{www.vagrantpress.dev}
+  else
+    raise "Vagrantpress requires vagrant-hostsupdater or vagrant-hostmanager plugin"
+  end
 
    config.vm.provision :shell do |shell|
       shell.inline = "

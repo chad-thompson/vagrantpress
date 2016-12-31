@@ -6,3 +6,4 @@ latest.tar.gz
 /wordpress/
 /wp-tests/
 /tests/
+.idea/

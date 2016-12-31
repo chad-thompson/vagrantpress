@@ -32,7 +32,7 @@ I initially created this project to aid in developing child modules for a WordPr
 
 + [Vagrant](http://www.vagrantup.com/downloads.html)
 + [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
-+ [Vagrant Hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater)
++ [Vagrant Hostsupdater](https://github.com/cogitatio/vagrant-hostsupdater) or [Vagrant Hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager) plugin
 
 ## Getting Started
 
